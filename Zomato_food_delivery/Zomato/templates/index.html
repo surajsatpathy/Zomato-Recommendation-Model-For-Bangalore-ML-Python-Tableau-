@@ -1,0 +1,171 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recommentation Model</title>
+    <link 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+          crossorigin="anonymous">
+    
+    <style>
+      *{ 
+        /*border: 1px solid black; */
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body style="height: 100vh; background-image: url('https://mybayutcdn.bayut.com/mybayut/wp-content/uploads/Best-restaurants-you-can-dine-at-for-AED-50-or-less-in-Dubai-Cover-14-10.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+    <div class="m-3 p-2">
+      <div class="container">
+        
+        <div class="d-flex flex-column">
+          <!--  Heading  -->
+          <p class="container m-1 p-2" 
+             style="font-size: 3rem; background-color: rgb(90, 1, 6); color:rgb(255, 255, 255);">Recommendation Model</p>
+          
+          <!--  Input form  -->
+          <form action="{{ url_for('showRecommendaion') }}" method='post'>
+            <div class="container m-1 row  border border-primary"
+                 style="background-color: rgb(247, 225, 225);">
+              <!--  Left column  -->
+              <div class="col">
+                <!--  Cuisine  -->
+                <div class="row m-2 g-3 align-items-center">
+                  <div class="col-6">
+                    <label for="cuisine" class="col-form-label"><b>Cuisine</b></label>
+                  </div>
+                  <div class="col-6">
+                    <input type="text" value='{{ cuisine }}' name="cuisine" class="form-control">
+                  </div>
+                </div>
+                <!--  Prefered price for 1  -->
+                <div class="row m-2 g-3 align-items-center">
+                  <div class="col-6">
+                    <label for="prefered-price-for-one" class="col-form-label"><b>Price for 1:</b></label>
+                  </div>
+                  <div class="col-6">
+                    <input type="text" value='{{ price }}' name="prefered-price-for-one" class="form-control">
+                  </div>
+                </div>
+              </div>
+              
+              <!--  Right column  -->
+              <div class="col">
+                <!--  Prefered location  -->
+                <div class="row m-2 g-3 align-items-center">
+                  <div class="col-6">
+                    <label for="prefered-location" class="col-form-label"><b>Prefered location</b></label>
+                  </div>
+                  <div class="col-6">
+                    <input type="text" value='{{ loc }}' name="prefered-location" 
+                          class="form-control" aria-describedby="passwordHelpInline">
+                  </div>
+                </div>
+              </div>
+              <button class="container btn btn-primary m-1">Submit</button>
+            </div>
+          </div>
+          </form>
+          
+          <!--  Output form  -->
+          <div class="container m-1 row  border border-primary"
+               style="background-color: rgb(247, 225, 225);">
+            <!--  Left column  -->
+            <div class="col">
+              
+              <p style="font-size: 2rem;"><b>Based on your prefered location</b></p>
+              
+              <!--  Avg price for 1  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="avg-price-for-one" class="col-form-label"><b>Average price for 1 :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="avg-price-for-one">{{ avg_price }}</p>
+                </div>
+              </div>
+              <!--  Popular Cuisine  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="popular-cuisine" class="col-form-label"><b>Popular Cuisine :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="popular-cuisine">{{ cusines }}</p>
+                </div>
+              </div>
+              <!--  Most Popular Restaurant  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="most-popular-restaurant" class="col-form-label"><b>Most Popular Restaurant :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="most-popular-restaurant">{{ pop_res }}</p>
+                </div>
+              </div>
+              <!--  Serves  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="serves" class="col-form-label"><b>Serves :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="serves">{{ pop_res_cusine }}</p>
+                </div>
+              </div>
+              <!--  Popular restaurants that serve this cuisine:  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="restaurant-serve-cuisine" 
+                         class="col-form-label"><b>Popular restaurants that serve this cuisine :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="restaurant-serve-cuisine">{{ pop_res_prefCus_wise }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <!--  Right column  -->
+            <div class="col">
+              
+              <p style="font-size: 2rem;"><b>Recommendations</b></p>
+              
+              <!--  Recommended price  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="recommended-price" class="col-form-label"><b>Recommendeation Engine Suggestion:</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="recommended-price">{{ rec_price }}</p>
+                </div>
+              </div>
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="recommended-price" class="col-form-label"><b>Processed Recommended Price:</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="recommended-price">{{ pro_rec_price }}</p>
+                </div>
+              </div>
+              <!--  Recommended location  -->
+              <div class="row m-2 g-3 align-items-center">
+                <div class="col-6">
+                  <label for="recommended-location" class="col-form-label"><b>Recommended Location :</b></label>
+                </div>
+                <div class="col-6">
+                  <p id="recommended-location">{{ rec_loc }}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+      </div>
+        
+    </div>
+  </div>
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" 
+          crossorigin="anonymous"></script>
+  </body>
+</html>
